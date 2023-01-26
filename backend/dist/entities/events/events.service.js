@@ -22,9 +22,12 @@ let EventsService = class EventsService {
         this.eventRepository = eventRepository;
     }
     async findAllBy(recipientId) {
-        return (await this.eventRepository.findBy({
+        const events = await this.eventRepository.findBy({
             care_recipient_id: (0, typeorm_2.Equal)(recipientId),
-        })).sort((a, b) => { return b.timestamp.localeCompare(a.timestamp); });
+        });
+        return [...events]
+            .sort((a, b) => { return b.timestamp.localeCompare(a.timestamp); })
+            .map(({ payload }) => payload);
     }
 };
 EventsService = __decorate([

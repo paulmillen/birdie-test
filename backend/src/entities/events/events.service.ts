@@ -10,9 +10,13 @@ export class EventsService {
     private eventRepository: Repository<Event>,
   ) { }
 
-  async findAllBy(recipientId: string): Promise<Event[]> {
-    return (await this.eventRepository.findBy({
+  async findAllBy(recipientId: string): Promise<Event['payload'][]> {
+    const events = await this.eventRepository.findBy({
       care_recipient_id: Equal(recipientId),
-    })).sort((a, b) => { return b.timestamp.localeCompare(a.timestamp) });
+    })
+
+    return [...events]
+      .sort((a, b) => { return b.timestamp.localeCompare(a.timestamp) })
+      .map(({ payload }) => payload);
   }
 }

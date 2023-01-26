@@ -3,5 +3,5 @@ import { Event } from '../../entities/events/event.entity';
 export declare class CareRecipientsController {
     private readonly eventsService;
     constructor(eventsService: EventsService);
-    getAllEvents(params: any): Promise<Event[]>;
+    getAllEvents(params: any): Promise<Event['payload'][]>;
 }

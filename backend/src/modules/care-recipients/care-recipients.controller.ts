@@ -7,7 +7,7 @@ export class CareRecipientsController {
 	constructor(private readonly eventsService: EventsService) { }
 
 	@Get('events')
-	async getAllEvents(@Param() params): Promise<Event[]> {
+	async getAllEvents(@Param() params): Promise<Event['payload'][]> {
 		return await this.eventsService.findAllBy(params.id);
 	}
 }
