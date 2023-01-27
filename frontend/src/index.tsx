@@ -1,10 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { QueryClient, QueryClientProvider } from 'react-query'
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import 'dayjs/locale/en-gb'
+
+import './index.css';
 
 const queryClient = new QueryClient()
 
@@ -12,7 +16,9 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <LocalizationProvider adapterLocale={'en-gb'} dateAdapter={AdapterDayjs}>
+          <App />
+        </LocalizationProvider>
       </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>,

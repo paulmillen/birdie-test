@@ -8,7 +8,7 @@ const eventsService = new EventsService(repository);
 
 describe(EventsService, () => {
   describe('findAllBy', () => {
-    it('returns a JSON of inverse sorted event payloads', async () => {
+    it('returns an array of inverse sorted event entries', async () => {
       const id = '03f3306d-a4a3-4179-ab88-81af66df8b7c';
 
       when(jest.spyOn(repository, 'findBy'))
@@ -17,7 +17,11 @@ describe(EventsService, () => {
 
       const response = await eventsService.findAllBy(id)
 
-      expect(response).toEqual([rawTestResponse[1].payload, rawTestResponse[2].payload, rawTestResponse[0].payload])
+      expect(response).toEqual([
+        ['2019-05-12', [rawTestResponse[1].payload]],
+        ['2019-05-05', [rawTestResponse[2].payload, rawTestResponse[3].payload]],
+        ['2019-04-26', [rawTestResponse[0].payload]]
+      ])
     });
   });
 });
@@ -70,4 +74,20 @@ const rawTestResponse: Event[] = [
     timestamp: '2019-05-05T06:33:14.547Z',
     care_recipient_id: 'df50cac5-293c-490d-a06c-ee26796f850d',
   },
+  {
+    id: '00114a9f-00dc-4f39-a6ac-af1b7e0543e7',
+    payload: JSON.stringify({
+      id: '0727399e-c3a3-48e8-9bbc-34d491cc4dbd',
+      timestamp: '2019-05-05T07:33:14.547Z',
+      event_type: 'fluid_intake_observation',
+      consumed_volume_ml: 230,
+      caregiver_id: '220d9432-b5ed-4c81-8709-434899d2cd1b',
+      care_recipient_id: 'df50cac5-293c-490d-a06c-ee26796f850d',
+      visit_id: '5cce1970-8b66-f8a8-4f57-664f682ae36d',
+      fluid: 'water',
+      observed: true
+    }),
+    timestamp: '2019-05-05T07:33:14.547Z',
+    care_recipient_id: 'df50cac5-293c-490d-a06c-ee26796f850d',
+  }
 ];

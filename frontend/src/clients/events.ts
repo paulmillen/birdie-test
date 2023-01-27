@@ -4,14 +4,15 @@ export const generateQueryKey = (id: string | undefined): ['getAllEvents', strin
   return ['getAllEvents', id]
 }
 
-export const getAllEvents = async ({ queryKey }: QueryFunctionContext<ReturnType<typeof generateQueryKey>>): Promise<AllEvents[]> => {
+export const getAllEvents = async ({ queryKey }: QueryFunctionContext<ReturnType<typeof generateQueryKey>>): Promise<[string, Event[]][]> => {
   const [, id] = queryKey
   return id === undefined ? [] : (await fetch(`/api/care-recipients/${id}/events`)).json()
 }
 
-export type AllEvents =
+export type Event =
   | GeneralObservationEvent
   | TaskCompletedEvent
+  | FoodIntakeObservation
   | FluidIntakeEvent
   | PhysicalHealthObservationEvent
   | VisitCompletedEvent
@@ -31,7 +32,7 @@ interface BaseEvent {
   care_recipient_id: string;
 }
 
-interface GeneralObservationEvent {
+interface GeneralObservationEvent extends BaseEvent {
   note: string;
   media: string[];
   event_type: 'general_observation';
@@ -51,6 +52,12 @@ interface FluidIntakeEvent extends BaseEvent {
   observed: boolean;
   event_type: 'fluid_intake_observation';
   consumed_volume_ml: number;
+}
+
+interface FoodIntakeObservation extends BaseEvent {
+  event_type: 'food_intake_observation',
+  meal: string;
+  note: string;
 }
 
 interface PhysicalHealthObservationEvent extends BaseEvent {

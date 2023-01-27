@@ -1,3 +1,4 @@
+import { PageLoadingSpinner } from "./views/global-components";
 import React, {
   Suspense
 } from "react"
@@ -7,11 +8,11 @@ const Events = React.lazy(() => import('./views/Events/Events'))
 
 function App() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<PageLoadingSpinner />}>
       <Routes>
         <Route path='/'>
           <Route path='care-recipients'>
-            <Route index element={<div>Recipient Root</div>} />
+            <Route index />
             <Route path=':id'>
               <Route path='events' element={<Events />} />
             </Route>
