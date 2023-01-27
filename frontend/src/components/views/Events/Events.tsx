@@ -4,11 +4,11 @@ import { useQuery } from 'react-query'
 import dayjs from 'dayjs'
 import { Container, Box, TextField } from '@mui/material'
 import { DataGrid, GridColDef, GridRowModel } from '@mui/x-data-grid'
-import { Event, generateQueryKey, getAllEvents } from '../../clients'
+import { Event, generateQueryKey, getAllEvents } from '../../../clients'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { PageLoadingSpinner } from '../global-components'
+import { PageLoadingSpinner } from '../../global-components'
 
-const Events = () => {
+const Events: React.FC = () => {
   const { id } = useParams()
   const { data: events = [], isLoading } = useQuery(generateQueryKey(id), getAllEvents)
   const [eventsMap, setEventsMap] = useState<Record<string, Event[]> | undefined>()
