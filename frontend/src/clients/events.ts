@@ -1,12 +1,14 @@
 import { QueryFunctionContext } from 'react-query'
 
-export const generateQueryKey = (id: string | undefined): ['getAllEvents', string | undefined] => {
-  return ['getAllEvents', id]
+export const generateQueryKey = (id: string | undefined, timestamp?: string | null): ['getEvents', string | undefined, string | undefined | null] => {
+  return ['getEvents', id, timestamp]
 }
 
-export const getAllEvents = async ({ queryKey }: QueryFunctionContext<ReturnType<typeof generateQueryKey>>): Promise<[string, Event[]][]> => {
-  const [, id] = queryKey
-  return id === undefined ? [] : (await fetch(`/api/care-recipients/${id}/events`)).json()
+export const getEvents = async ({ queryKey }: QueryFunctionContext<ReturnType<typeof generateQueryKey>>): Promise<Event[]> => {
+  const [, id, timestamp] = queryKey
+  return id === undefined
+    ? []
+    : (await fetch(`/api/care-recipients/${id}/events${timestamp ? `?date=${timestamp}` : ''}`)).json()
 }
 
 export type Event =

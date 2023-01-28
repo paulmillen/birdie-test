@@ -1,12 +1,18 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { DailyEventsItem, EventsService } from '../../entities/events/events.service';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { EventsService, Event } from '../../entities/events';
 
 @Controller('care-recipients/:id')
 export class CareRecipientsController {
-	constructor(private readonly eventsService: EventsService) { }
+  constructor(private readonly eventsService: EventsService) {}
 
-	@Get('events')
-	async getAllEvents(@Param() params): Promise<DailyEventsItem[]> {
-		return await this.eventsService.findAllBy(params.id);
-	}
+  @Get('events')
+  async getLatestByDate(
+    @Param() params,
+    @Query() query,
+  ): Promise<Event['payload'][]> {
+    return await this.eventsService.findByDateOrLatestFor(
+      params.id,
+      query.date,
+    );
+  }
 }

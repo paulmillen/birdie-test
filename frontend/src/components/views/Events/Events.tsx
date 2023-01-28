@@ -1,40 +1,34 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import dayjs from 'dayjs'
 import { Container, Box, TextField } from '@mui/material'
 import { DataGrid, GridColDef, GridRowModel } from '@mui/x-data-grid'
-import { Event, generateQueryKey, getAllEvents } from '../../../clients'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { PageLoadingSpinner } from '../../global-components'
+import { Event, generateQueryKey, getEvents } from '../../../clients'
 
 const Events: React.FC = () => {
   const { id } = useParams()
-  const { data: events = [], isLoading } = useQuery(generateQueryKey(id), getAllEvents)
-  const [eventsMap, setEventsMap] = useState<Record<string, Event[]> | undefined>()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { data: events = [], isLoading } = useQuery(generateQueryKey(id, searchParams.get('date') ?? undefined), getEvents)
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null)
-  const [selectedEvents, setSelectedEvents] = useState<Event[] | undefined>()
 
   useEffect(() => {
     if (!isLoading) {
-      const defaultDate = events[0]?.[0]
+      const defaultDate = events[0]?.timestamp
 
       if (defaultDate !== undefined) {
         setSelectedDate(dayjs(defaultDate))
       }
-
-      setEventsMap(Object.fromEntries(events))
     }
   }, [events, isLoading])
 
-  useEffect(() => {
-    const parsedDate = selectedDate?.format('YYYY-MM-DD')
-
-    if (parsedDate !== undefined && eventsMap !== undefined) {
-      setSelectedEvents(eventsMap[parsedDate])
+  const handleDateChange = (newValue: dayjs.Dayjs | null) => {
+    if (newValue !== null) {
+      setSelectedDate(newValue)
+      setSearchParams({ date: newValue.format().slice(0, 10) })
     }
-
-  }, [selectedDate, eventsMap])
+  }
 
   const getNotes = (event: Event): string => {
     if ('task_definition_description' in event) {
@@ -57,7 +51,7 @@ const Events: React.FC = () => {
       return `Fluid: ${event.fluid}`
     }
 
-    return event.event_type
+    return event.event_type.replace(/_/g, " ");
   }
 
   const getColumns = (): GridColDef[] => {
@@ -87,29 +81,31 @@ const Events: React.FC = () => {
 
   return (
     <Container disableGutters>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-        {isLoading ?
-          <PageLoadingSpinner /> : (
-            <>
-              <Box sx={{ height: 'auto', margin: 1 }}>
-                <DatePicker
-                  label='select a day'
-                  value={selectedDate}
-                  onChange={(newValue) => setSelectedDate(newValue)}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-              </Box>
-              <Box sx={{ flexGrow: 0.9, width: '90%' }}>
-                <DataGrid
-                  rows={selectedEvents ? selectedEvents.map(getRow) : []}
-                  columns={getColumns()}
-                  getRowHeight={() => 'auto'}
-                  getRowSpacing={() => ({ top: 2, bottom: 2 })}
-                  disableSelectionOnClick
-                />
-              </Box>
-            </>
-          )}
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh'
+      }}>
+        <Box sx={{ height: 'auto', margin: 1 }}>
+          <DatePicker
+            label='select a day'
+            value={selectedDate}
+            onChange={handleDateChange}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </Box>
+        <Box sx={{ flexGrow: 0.9, width: '90%' }}>
+          <DataGrid
+            rows={events.map(getRow)}
+            columns={getColumns()}
+            getRowHeight={() => 'auto'}
+            getRowSpacing={() => ({ top: 2, bottom: 2 })}
+            disableSelectionOnClick
+            loading={isLoading}
+          />
+        </Box>
       </Box>
     </Container>
   )

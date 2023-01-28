@@ -9,4 +9,4 @@ import { CareRecipientsController } from './care-recipients.controller';
   providers: [EventsService],
   controllers: [CareRecipientsController],
 })
-export class CareRecipientsModule { }
+export class CareRecipientsModule {}

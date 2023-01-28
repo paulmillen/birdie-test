@@ -1,31 +1,53 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Event } from './event.entity';
 
-export type DailyEventsItem = [string, Event['payload'][]]
-  
+export type DailyEventsItem = [string, Event['payload'][]];
+
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event)
     private eventRepository: Repository<Event>,
-  ) { }
+  ) {}
 
-  async findAllBy(recipientId: string): Promise<DailyEventsItem[]> {
-    const events = await this.eventRepository.findBy({
-      care_recipient_id: Equal(recipientId),
-    })
+  async findByDateOrLatestFor(
+    recipientId: string,
+    date?: string,
+  ): Promise<Event['payload'][]> {
+    if (date === undefined) {
+      const latestEvent = await this.eventRepository.findOne({
+        where: [{ care_recipient_id: recipientId }],
+        order: { timestamp: 'DESC' },
+      });
 
-    const sortedByLatest = [...events].sort((a, b) => { return b.timestamp.localeCompare(a.timestamp) })
+      return this.findByDateFor(
+        recipientId,
+        latestEvent.timestamp.slice(0, 10),
+      );
+    }
 
-    const map = new Map<string, Event['payload'][]>()
+    return this.findByDateFor(recipientId, date);
+  }
 
-    sortedByLatest.forEach((event) => {
-      const dateKey = event.timestamp.slice(0, 10)
-      map.set(dateKey, [event.payload, ...(map.get(dateKey) ?? [])])
-    });
-
-    return [...map.entries()]
+  private async findByDateFor(
+    recipientId: string,
+    date?: string,
+  ): Promise<Event['payload'][]> {
+    return (
+      await this.eventRepository.find({
+        select: {
+          payload: true,
+        },
+        where: {
+          care_recipient_id: recipientId,
+          timestamp: Like(`${date}%`),
+        },
+        order: {
+          timestamp: 'ASC',
+        },
+      })
+    ).map((event) => event.payload);
   }
 }

@@ -13,17 +13,19 @@ describe('CareRecipientController', () => {
   describe('care-recipients/:id/events', () => {
     it('should call the correct service', async () => {
       const id = '03f3306d-a4a3-4179-ab88-81af66df8b7c';
-      const event = {
+      const date = '2020-01-01';
+
+      const eventPayload = JSON.stringify({
         care_recipient_id: id,
         mood: 'okay',
-      };
+      });
 
-      when(jest.spyOn(eventService, 'findAllBy'))
-        .calledWith(id)
-        .mockResolvedValue([event]);
+      when(jest.spyOn(eventService, 'findByDateOrLatestFor'))
+        .calledWith(id, date)
+        .mockResolvedValue([eventPayload]);
 
-      const response = await controller.getAllEvents({ id });
-      expect(response).toEqual([event]);
+      const response = await controller.getLatestByDate({ id }, { date });
+      expect(response).toEqual([eventPayload]);
     });
   });
 });

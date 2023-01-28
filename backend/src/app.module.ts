@@ -18,11 +18,11 @@ import { CareRecipientsModule } from './modules/care-recipients/care-recipients.
         synchronize: false,
         autoLoadEntities: true,
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
     CareRecipientsModule,
   ],
   providers: [],
   controllers: [],
 })
-export class AppModule { }
+export class AppModule {}
