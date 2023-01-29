@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { EventsService, Event } from '../../entities/events';
 
-@Controller('care-recipients/:id')
+@Controller('api/care-recipients/:id')
 export class CareRecipientsController {
   constructor(private readonly eventsService: EventsService) {}
 

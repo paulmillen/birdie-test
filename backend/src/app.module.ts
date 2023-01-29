@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
 import { CareRecipientsModule } from './modules/care-recipients/care-recipients.module';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../..', 'frontend/build'),
+    }),
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -25,4 +30,4 @@ import { CareRecipientsModule } from './modules/care-recipients/care-recipients.
   providers: [],
   controllers: [],
 })
-export class AppModule {}
+export class AppModule { }
