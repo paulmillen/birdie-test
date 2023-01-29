@@ -1,0 +1,7 @@
+{
+  "name": "birdie-test",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}
