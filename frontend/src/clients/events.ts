@@ -1,4 +1,5 @@
 import { QueryFunctionContext } from 'react-query'
+import axios from 'axios'
 
 export const generateQueryKey = (id: string | undefined, timestamp?: string | null): ['getEvents', string | undefined, string | undefined | null] => {
   return ['getEvents', id, timestamp]
@@ -8,7 +9,7 @@ export const getEvents = async ({ queryKey }: QueryFunctionContext<ReturnType<ty
   const [, id, timestamp] = queryKey
   return id === undefined
     ? []
-    : (await fetch(`/api/care-recipients/${id}/events${timestamp ? `?date=${timestamp}` : ''}`)).json()
+    : (await axios.get(`/api/care-recipients/${id}/events${timestamp ? `?date=${timestamp}` : ''}`)).data
 }
 
 export type Event =

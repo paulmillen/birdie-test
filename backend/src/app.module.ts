@@ -8,7 +8,7 @@ import { CareRecipientsModule } from './modules/care-recipients/care-recipients.
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../..', 'frontend/build'),
+      rootPath: join(__dirname, '../..', 'frontend/dist'),
     }),
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({

@@ -1,5 +1,6 @@
 import { when } from 'jest-when'
 import { getEvents } from './events'
+import axios from 'axios'
 
 describe('getEvents', () => {
   it('returns an empty array when id is undefined', async () => {
@@ -9,9 +10,9 @@ describe('getEvents', () => {
   })
 
   it('calls fetch correctly when timestamp is undefined', async () => {
-    when(jest.spyOn(window, 'fetch'))
+    when(jest.spyOn(axios, 'get'))
       .calledWith('/api/care-recipients/some-id/events')
-      .mockResolvedValue({ json: () => Promise.resolve([{ test: 'response' }]) } as any)
+      .mockResolvedValue({ data: [{ test: 'response' }] } as any)
 
     const actual = await getEvents({ queryKey: ['getEvents', 'some-id', undefined], meta: {} })
 
@@ -19,9 +20,9 @@ describe('getEvents', () => {
   })
 
   it('calls fetch correctly when timestamp is present', async () => {
-    when(jest.spyOn(window, 'fetch'))
+    when(jest.spyOn(axios, 'get'))
       .calledWith('/api/care-recipients/some-id/events?date=2020-01-01')
-      .mockResolvedValue({ json: () => Promise.resolve([{ test: 'response' }]) } as any)
+      .mockResolvedValue({ data: [{ test: 'response' }] } as any)
 
     const actual = await getEvents({ queryKey: ['getEvents', 'some-id', '2020-01-01'], meta: {} })
 

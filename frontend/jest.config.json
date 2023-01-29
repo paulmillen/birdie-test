@@ -1,0 +1,11 @@
+{
+    "rootDir": ".",
+    "testEnvironment": "jsdom",
+    "testRegex": "\\.spec\\.tsx?$",
+    "transform": {
+        "^.+\\.tsx?$": "@swc/jest"
+    },
+    "setupFilesAfterEnv": [
+        "<rootDir>/src/setupTests.ts"
+    ]
+}
