@@ -6,6 +6,6 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces",
-    "start": "npm start --workspace=backend"
+    "start": "npm run start:prod --workspace=backend"
   }
 }
