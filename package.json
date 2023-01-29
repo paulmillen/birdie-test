@@ -1,0 +1,11 @@
+{
+  "name": "my-workspaces-powered-project",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "start": "npm start --workspace=backend"
+  }
+}
