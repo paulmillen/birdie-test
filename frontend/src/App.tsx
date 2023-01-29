@@ -1,8 +1,8 @@
-import { PageLoadingSpinner } from "./components/global-components";
 import React, {
   Suspense
-} from "react"
-import { Routes, Route } from 'react-router-dom'
+} from "react";
+import { Route, Routes } from 'react-router-dom';
+import { PageLoadingSpinner } from "./components/global-components";
 
 const Events = React.lazy(() => import('./components/views/Events/Events'))
 

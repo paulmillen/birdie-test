@@ -1,13 +1,21 @@
-import * as ReactQuery from 'react-query';
-import { when } from 'jest-when';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { when } from 'jest-when';
+import * as ReactQuery from 'react-query';
+import * as ReactRouter from 'react-router-dom';
+import { Event as EventPayload, generateQueryKey, getEvents } from '../../../clients';
+import { TestWrapper } from '../../global-components';
 import Events from './Events';
-import { TestWrapper } from '../../global-components'
-import { generateQueryKey, getEvents, Event as EventPayload } from '../../../clients'
+
+const testIdParam = 'test-id';
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: jest.fn()
+}))
 
 describe('Events', () => {
   beforeEach(() => {
     jest.resetAllMocks()
+    jest.spyOn(ReactRouter, 'useParams').mockReturnValue({ id: testIdParam })
   })
 
   describe('when events are loaded', () => {
@@ -41,11 +49,12 @@ describe('Events', () => {
     beforeEach(() => {
       jest.spyOn(ReactQuery, 'useQuery')
         .mockReturnValue({ data: mockPayload1, isLoading: false, error: {} } as ReactQuery.UseQueryResult)
+      jest.spyOn(ReactRouter, 'useParams').mockReturnValue({ id: testIdParam })
     })
 
-    it.only("renders a table with the selected day's events", () => {
+    it("renders a table with the selected day's events", () => {
       when(jest.spyOn(ReactQuery, 'useQuery'))
-        .calledWith(generateQueryKey(undefined, '2023-01-13'), getEvents as any)
+        .calledWith(generateQueryKey(testIdParam, '2023-01-13'), getEvents as any)
         .mockReturnValue({ data: mockPayload2, isLoading: false, error: {} } as ReactQuery.UseQueryResult)
 
       render(
@@ -87,4 +96,4 @@ const mockPayload2 = [
   { id: 3, 'medication_type': 'ibuprofen', timestamp: '2023-01-11T06:00:53.049Z' },
   { id: 4, 'note': 'watched TV together', timestamp: '2023-01-12T07:00:53.049Z' },
   { id: 5, 'fluid': 'tea with sugar', timestamp: '2023-01-13T08:00:53.049Z' }
-]
+] as unknown as EventPayload[]
