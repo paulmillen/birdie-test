@@ -3,8 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { Event } from './event.entity';
 
-export type DailyEventsItem = [string, Event['payload'][]];
-
 @Injectable()
 export class EventsService {
   constructor(
