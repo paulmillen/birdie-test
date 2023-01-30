@@ -1,5 +1,5 @@
 {
-  "name": "frontend2",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -35,7 +35,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "dev": "vite",
+    "start": "vite",
     "build": "vite build",
     "test": "jest"
   },

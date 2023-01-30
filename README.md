@@ -1,120 +1,47 @@
 # Birdie Developer Test
 
-We would like to thank you for taking our developer test. We understand that candidates will often have many of these tests to complete, therefore we think it's important to cut straight to the important stuff.
+**Hello!**  Thank you for taking the time to consider this tech test solution.  I hope you enjoy assessing it as much as I enjoyed working on it. Without futher ado...
 
-## About this repository
+## Quickstart
 
-We've gone ahead and created a boilerplate that mostly corresponds to the technical stack we use at Birdie. The `backend/` is a barebone Express server and the `frontend/` has been generated with `npx create-react-app frontend --template typescript`. This saves you from having to create boilerplate code, but you are free to decide to use only parts of it, for example:
+You can view the solution [here](https://paulmillen-birdie.herokuapp.com/care-recipients/df50cac5-293c-490d-a06c-ee26796f850d/events).
 
-- If you want to use Redux, you can use `npx create-react-app frontend --template redux` or `npx create-react-app frontend --template redux-typescript`.
+This will show the latest events for that care recipient.  Use the calendar to select previous dates.
 
-You are also free to make other technical choices, for example:
+I believe there's only one care recipient ID in the events table, but if there were more you could change the path accordingly.  Also adding `?date=[YYYY-MM-DD]` will return any events for that date.
 
-- Use Redux Thunk, Redux Observables, Redux Saga...
-- Use Express, NestJS, Loopback...
-- PostgreSQL, MySQL...
+In the root:  
+`$ npm install`
 
-Although we do encourage you to be pragmatic and prioritise delivering value over fine-tuning your technical stack.
+`$ npm run test` - runs the tests for both packages
 
-## Context
+`$ cd backend && npm run start` - to start the backend on 8080  
+`$ cd frontend && npm run start` - to start the frontend on 5173
 
-At Birdie, our app allows care givers to record observations of older adults receiving care, we name them **care recipients**.
+## Concept
 
-These could be anything from the recording of their mood (happy, sad, bored, confused) to what they drank today (1 pint of water).
+To display events to a relative, the idea of a sort of calendar presented itself quite strongly in my mind.
 
-Each of these observations are recorded as events in our database. Here's an example of a mood observation recorded
-in this event format:
+Firstly I thought it was really important to enable the user to clearly see what has taken place and when with regards to their relatives care; in my experience one great source of anxiety was whether the carer had attended at all, so I wanted this to be something a user could check quickly and easily.
 
-``` json
-{  
-   "id":"decaa026-2ce5-49cb-aff9-92326b85a98c",
-   "event_type":"mood_observation",
-   "visit_id":"39b94aab-cc35-4874-807f-c23472aec663",
-   "timestamp":"2019-04-23T10:53:13+01:00",
-   "caregiver_id":"4786d616-259e-4d52-80f7-8cf7dc6d881a",
-   "care_recipient_id":"03f3306d-a4a3-4179-ab88-81af66df8b7c",
-   "mood":"okay",
-},
-```
+Secondly, I felt that a calendar enables the relative to maintain a kind of proximity to their loved one.  They can build a picture of their day, week or month in a very relatable format - being close to the person via the carer interactions when they may not be able to be present themselves a lot of the time.  Seeing a simple timeline of the headline events builds a narrative and a record of their loved one's life.  I was keen to present something personal rather than rows of data, at least in the primary view.
 
-Here's a quick explanation of the base properties:
+## Give more time...
 
-- `id`: Uniquely identifies the observation.
-- `event_type`: Title we use to categorise our events.
-- `visit_id`: Observations are traditionally observed during a visit between the caregiver (carer) and care recipient. This ID identifies that visit.
-- `caregiver_id`: Identifies who the caregiver (carer) was that made this observation.
-- `care_recipient_id`: Identifies the care recipient this observation is for.
+### Frontend
 
-On top of that, there can be **additional properties** based on the `event_type`:
+Well, there is no denying that it's very functional and not terribly pretty!  There is certainly work to be done to make the design a little easier on the eye.  I would have added a bit more formatting of each of the event 'notes' and added an icon per event to make it easier for the user to parse at a glance what the timeline depicts - particularly for urgent events.  There is some work to be done to filter events in a more sensible way for the relative.  Perhaps allowing them to see 'headline' events with the option of more detailed events if desired.
 
-- `mood` describes the mood of the care recipient as reported by the caregiver
+I would have also liked to present more information on each event row on-click.  Perhaps a modal displaying more fully the event detail, carer information etc.  I would also have made the layout better for desktop - the immediate priority being mobile.
 
-The database (we should have sent you credentials) contains some of these observation events, within the `events` table.
+More functionally, the front end needs to be a bit more tolerant to error and present useful information to the user in the case that there's a problem upstream.
 
-## Challenge
+### Backend
 
-*Display the information to a family member*
+I think that the events data structure lends itself well to a document data storage strategy so if I had endless time I would perhaps have migrated the records to something like DynamoDB.  Using a composite key based on care recipient ID and event timestamp would enable the events to be accessed with one query, no need to do a separate query to establish the latest days events first.  There would be a lot of flexibility in the way the sort key could be queried to grab all events by dates or times very easily and quickly.  Useful secondary indexes could be created for e.g. care giver ID.  It would also be very easy to extend the entity to any data shape as long as the pk/sk and GSI's were maintaned as desired - as there are numerous types of events.  Were I to do this it would also be prudent to add some runtime validation using something like Zod to ensure the data received is as expected.
 
-#### Your challenge is to clone this repository and create a small web application to visualize these observations, so that looking at it is valuable to a family member of this care recipient
+Generally, I would add some logging and monitoring and perhaps slightly more robust error handling.  I've never used Nest before but it seemed a good way to quickly spin up a backend with some useful bells and whistles (e.g. typeorm integration) to iterate quickly and delegate some thinking time away to a more opinionated structure.
 
-This could mean presenting it in the following forms:
 
-- A table
-- A graph
-- A timeline
 
- Or any other way/combination of those. We are test driven here at Birdie so please make sure you write tests to validate your work.
 
-## Deliverables
-
-- Put your code on Github and send us the link to the repository
-- Deploying the code to a platform like [Heroku](https://heroku.com) is a great plus.
-- **If you are unable to deploy your code please send a recording of the application working**
-
-## Set up
-
-Here's the technical stack this boilerplate was made with:
-
-### Front end
-
-- [React](https://reactjs.org/)
-- [Redux](https://redux.js.org/introduction/getting-started)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Redux sagas](https://redux-saga.js.org/docs/introduction/BeginnerTutorial.html)
-- [Styled components](https://www.styled-components.com/)
-
-### Back end
-
-- [Express](https://expressjs.com/)
-- [MySQL](https://www.mysql.com/)
-- [TypeScript](https://www.typescriptlang.org/)
-
-## Usage
-
-1. Start the API. (Run the following commands within the `backend` folder)
-
-   a. Install the dependencies
-
-   ```bash
-   npm install
-   ```
-
-   b. Run the HTTP server (will start on port `8000`)
-
-   ```bash
-   npm run dev
-   ```
-
-2. Start the React app  (Run the following commands within the `front-end` folder)
-
-    a. Install the dependencies
-
-   ```bash
-   npm install
-   ```
-
-   b. Run the application (will start on port `3000`)
-
-   ```bash
-   npm start
-   ```

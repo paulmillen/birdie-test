@@ -9,7 +9,7 @@ describe('getEvents', () => {
     expect(actual).toEqual([])
   })
 
-  it('calls fetch correctly when timestamp is undefined', async () => {
+  it('calls http client correctly when timestamp is undefined', async () => {
     when(jest.spyOn(axios, 'get'))
       .calledWith('/api/care-recipients/some-id/events')
       .mockResolvedValue({ data: [{ test: 'response' }] } as any)
@@ -19,7 +19,7 @@ describe('getEvents', () => {
     expect(actual).toEqual([{ test: 'response' }])
   })
 
-  it('calls fetch correctly when timestamp is present', async () => {
+  it('calls http client correctly when timestamp is present', async () => {
     when(jest.spyOn(axios, 'get'))
       .calledWith('/api/care-recipients/some-id/events?date=2020-01-01')
       .mockResolvedValue({ data: [{ test: 'response' }] } as any)

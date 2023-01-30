@@ -4,8 +4,13 @@
     "frontend",
     "backend"
   ],
+  "engines": {
+    "npm": ">=8.0.0",
+    "node": ">=16.0.0"
+  },
   "scripts": {
     "build": "npm run build --workspaces",
-    "start": "npm run start:prod --workspace=backend"
+    "start": "npm run start:prod --workspace=backend",
+    "test": "npm run test --workspaces"
   }
 }
