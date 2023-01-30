@@ -26,7 +26,7 @@ Firstly I thought it was really important to enable the user to clearly see what
 
 Secondly, I felt that a calendar enables the relative to maintain a kind of proximity to their loved one.  They can build a picture of their day, week or month in a very relatable format - being close to the person via the carer interactions when they may not be able to be present themselves a lot of the time.  Seeing a simple timeline of the headline events builds a narrative and a record of their loved one's life.  I was keen to present something personal rather than rows of data, at least in the primary view.
 
-## Give more time...
+## Given more time...
 
 ### Frontend
 
